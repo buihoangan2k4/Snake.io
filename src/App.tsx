@@ -1,5 +1,5 @@
 import React from 'react';
-import SnakeGame from './page/Snakegame';
+import SnakeGame from './assets/components/Snakegame';
 
 
 const App: React.FC = () => {
