@@ -1,15 +1,41 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FaPlay, FaPause, FaRedo } from "react-icons/fa";
+import "./SnakeGame.css";
 
 const SnakeGame = () => {
-    const GRID_SIZE = 20;
-    const CELL_SIZE = 20;
+
+    const topplayer = [
+        {
+            name: "Player1",
+            point: "100000",
+        },
+        {
+            name: "Player1",
+            point: "100000",
+        },
+        {
+            name: "Player1",
+            point: "100000",
+        },
+        {
+            name: "Player1",
+            point: "100000",
+        },
+        {
+            name: "Player1",
+            point: "100000",
+        },
+
+    ]
+
+    const GRID_SIZE = 35;
+    const CELL_SIZE = 25;
     const INITIAL_SPEED = 150;
 
     const [snake, setSnake] = useState([
         { x: 10, y: 10 },
         { x: 9, y: 10 },
-        { x: 8, y: 10 }
+        { x: 8, y: 10 },
     ]);
     const [food, setFood] = useState({ x: 15, y: 15 });
     const [direction, setDirection] = useState("RIGHT");
@@ -21,7 +47,7 @@ const SnakeGame = () => {
     const generateFood = useCallback(() => {
         const newFood = {
             x: Math.floor(Math.random() * GRID_SIZE),
-            y: Math.floor(Math.random() * GRID_SIZE)
+            y: Math.floor(Math.random() * GRID_SIZE),
         };
         setFood(newFood);
     }, []);
@@ -30,7 +56,7 @@ const SnakeGame = () => {
         setSnake([
             { x: 10, y: 10 },
             { x: 9, y: 10 },
-            { x: 8, y: 10 }
+            { x: 8, y: 10 },
         ]);
         setDirection("RIGHT");
         setGameOver(false);
@@ -90,23 +116,29 @@ const SnakeGame = () => {
             switch (e.key) {
                 case "ArrowUp":
                     if (direction !== "DOWN") setDirection("UP");
+                    e.preventDefault();
                     break;
                 case "ArrowDown":
                     if (direction !== "UP") setDirection("DOWN");
+                    e.preventDefault();
                     break;
                 case "ArrowLeft":
                     if (direction !== "RIGHT") setDirection("LEFT");
+                    e.preventDefault();
                     break;
                 case "ArrowRight":
                     if (direction !== "LEFT") setDirection("RIGHT");
+                    e.preventDefault();
                     break;
                 case " ":
                     setIsPaused((prev) => !prev);
+                    e.preventDefault();
                     break;
                 default:
                     break;
             }
         };
+
 
         window.addEventListener("keydown", handleKeyPress);
         return () => window.removeEventListener("keydown", handleKeyPress);
@@ -118,94 +150,112 @@ const SnakeGame = () => {
     }, [moveSnake]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
-            {!isStarted ? (
-                <div className="flex flex-col items-center">
-                    <h1 className="text-3xl font-bold text-white mb-4">Snake Game</h1>
-                    <button
-                        onClick={() => setIsStarted(true)}
-                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                    >
-                        Play Game
-                    </button>
+        <>
+            <div className="header">
+                <div className="text">
+                    <h2>Snaker IO</h2>
                 </div>
-            ) : (
-                <>
-                    <div className="mb-4 text-2xl font-bold text-white">Score: {score}</div>
-                    <div
-                        className="relative bg-gray-800 rounded-lg overflow-hidden"
-                        style={{
-                            width: GRID_SIZE * CELL_SIZE,
-                            height: GRID_SIZE * CELL_SIZE
-                        }}
-                    >
-                        {snake.map((segment, index) => (
-                            <div
-                                key={index}
-                                className="absolute bg-green-500 rounded-sm transition-all duration-150"
-                                style={{
-                                    width: CELL_SIZE - 2,
-                                    height: CELL_SIZE - 2,
-                                    left: segment.x * CELL_SIZE,
-                                    top: segment.y * CELL_SIZE
-                                }}
-                            />
-                        ))}
-                        <div
-                            className="absolute bg-red-500 rounded-full transition-all duration-150"
-                            style={{
-                                width: CELL_SIZE - 2,
-                                height: CELL_SIZE - 2,
-                                left: food.x * CELL_SIZE,
-                                top: food.y * CELL_SIZE
-                            }}
-                        />
-                        {gameOver && (
-                            <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-                                <div className="text-center">
-                                    <h2 className="text-2xl font-bold text-white mb-4">Game Over!</h2>
-                                    {/* Nút Play Again */}
-                                    <div className="flex gap-4">
-                                        {/* Nút Play Again */}
-                                        <button
-                                            onClick={resetGame} // Chơi lại ngay
-                                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                                        >
-                                            Play Again
-                                        </button>
+            </div>
 
-                                        {/* Nút Back to Start */}
-                                        <button
-                                            onClick={() => {
-                                                setIsStarted(false); // Quay lại màn hình bắt đầu
-                                                resetGame();
-                                            }}
-                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                                        >
-                                            Back to Start
-                                        </button>
-                                    </div>
-                                </div>
+            <div className="snake-body">
+                <div className="snake-container">
+                    {!isStarted ? (
+                        <div className="start-screen">
+                            <h1 className="game-title">Snake Game</h1>
+                            <div>
+                                <button className="start-button" onClick={() => setIsStarted(true)}>
+                                    Play Game
+                                </button>
                             </div>
-                        )}
+                        </div>
+                    ) : (
+                        <>
+                            <div className="score-display">Score: {score}</div>
+                            <div
+                                className="game-grid"
+                                style={{
+                                    width: GRID_SIZE * CELL_SIZE,
+                                    height: GRID_SIZE * CELL_SIZE,
+                                }}
+                            >
+                                {snake.map((segment, index) => (
+                                    <div
+                                        key={index}
+                                        className="snake-segment"
+                                        style={{
+                                            width: CELL_SIZE - 2,
+                                            height: CELL_SIZE - 2,
+                                            left: segment.x * CELL_SIZE,
+                                            top: segment.y * CELL_SIZE,
+                                        }}
+                                    />
+                                ))}
+                                <div
+                                    className="food"
+                                    style={{
+                                        width: CELL_SIZE - 2,
+                                        height: CELL_SIZE - 2,
+                                        left: food.x * CELL_SIZE,
+                                        top: food.y * CELL_SIZE,
+                                    }}
+                                />
+                                {gameOver && (
+                                    <div className="game-over-screen">
+                                        <div>
+                                            <h2 className="game-over-text">Game Over!</h2>
+                                            <div className="action-buttons">
+                                                <button className="play-again-button" onClick={resetGame}>
+                                                    Play Again
+                                                </button>
+                                                <button
+                                                    className="back-to-start-button"
+                                                    onClick={() => {
+                                                        setIsStarted(false);
+                                                        resetGame();
+                                                    }}
+                                                >
+                                                    Back to Start
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="controls">
+                                <button
+                                    className="control-button"
+                                    onClick={() => setIsPaused(!isPaused)}
+                                >
+                                    {isPaused ? <FaPlay /> : <FaPause />}
+                                </button>
+                                <button className="control-button" onClick={resetGame}>
+                                    <FaRedo />
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                <div className="top-sidebar">
+                    <div className="item-content-1">
+                        <h3>Top Players</h3>
+                        {topplayer.map((player, index) => (
+                            <div className="top-player" key={index}>
+                                <span>{index + 1}. {player.name}</span>
+                                <span>{player.point} pts</span>
+                            </div>
+                        ))}
                     </div>
-                    <div className="mt-4 flex gap-4">
-                        <button
-                            onClick={() => setIsPaused(!isPaused)}
-                            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                        >
-                            {isPaused ? <FaPlay /> : <FaPause />}
-                        </button>
-                        <button
-                            onClick={resetGame}
-                            className="p-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-                        >
-                            <FaRedo />
-                        </button>
+
+                    <div className="item-content-2">
+                        <h2>Developer Info</h2>
+                        <p>Team: Snake Devs</p>
+                        <p>Email: devs@snakegame.com</p>
                     </div>
-                </>
-            )}
-        </div>
+
+                </div>
+            </div>
+        </>
     );
 };
 
